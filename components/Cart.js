@@ -20,7 +20,7 @@ function Cart() {
           onClick={toggleCartVisibility}
           className="text-gray-600 focus:outline-none"
         >
-          <sv
+          <svg
             className="h-5 w-5"
             fill="none"
             strokeLinecap="round"
@@ -30,7 +30,7 @@ function Cart() {
             stroke="currentColor"
           >
             <path d="M6 18L18 6M6 6l12 12" />
-          </sv>
+          </svg>
         </button>
       </div>
       <hr className="my-3" />
