@@ -1,11 +1,12 @@
 import { useState } from "react";
 import Link from "next/link";
+import Cart from "./Cart";
+import { useCartContext } from "../utils/context";
 
 function Layout({ children }) {
   const [menuOpen, setMenuOpen] = useState(false);
-  const [cartOpen, setCartOpen] = useState(false);
   const handleMenu = () => setMenuOpen(!menuOpen);
-  const handleOpen = () => setCartOpen(!cartOpen);
+  const { toggleCartVisibility } = useCartContext();
   return (
     <div className="bg-white">
       <header>
@@ -38,7 +39,7 @@ function Layout({ children }) {
             </div>
             <div className="flex items-center justify-end w-full">
               <button
-                onClick={handleOpen}
+                onClick={toggleCartVisibility}
                 className="text-gray-600 focus:outline-none mx-4 sm:mx-0"
               >
                 <svg
@@ -50,7 +51,8 @@ function Layout({ children }) {
                   viewBox="0 0 24 24"
                   stroke="currentColor"
                 >
-                  <path d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+                  <path
+                    d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
                 </svg>
               </button>
 
@@ -119,10 +121,10 @@ function Layout({ children }) {
           </div>
         </div>
       </header>
-      {/*
-      // This Cart doesn't really work… yet!
-      <Cart cartOpen={cartOpen} handleOpen={handleOpen} />
-      */}
+
+      {/* // This Cart works… well sort of! */}
+      <Cart />
+
       <main className="my-8">{children}</main>
       <footer className="bg-gray-200">
         <div className="container mx-auto px-6 py-3 flex justify-between items-center">

@@ -4,3 +4,4 @@ public/studio
 .env.development
 .env
 .next
+.idea

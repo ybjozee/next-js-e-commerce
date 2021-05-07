@@ -1,5 +1,3 @@
-import { useState } from "react";
-
 import ProductCard from "./ProductCard";
 
 function ProductsPage({ products }) {

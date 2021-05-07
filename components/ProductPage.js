@@ -1,10 +1,46 @@
-import {useState} from 'react'
-import { urlFor, PortableText, getClient } from "../utils/sanity";
+import { useState } from "react";
+import { urlFor, PortableText } from "../utils/sanity";
+import { useCartContext } from "../utils/context";
 
 function ProductPage(props) {
-  const [count, setCount] = useState(1)
-  const handleCount = (value) => !(count === 0 && value === -1) ? setCount(count + value) : count
-  const { title, defaultProductVariant, mainImage, body } = props;
+  const {
+    title, defaultProductVariant, mainImage,
+    body, id: productId, slug
+  } = props;
+
+  const {
+    findOrderInCart, addOrderToCart, removeOrderFromCart,
+    updateOrderQuantity, showCart, toggleCartVisibility
+  } = useCartContext();
+
+  let orderInCart = findOrderInCart(productId);
+
+  const [count, setCount] = useState(orderInCart?.quantity || 1);
+
+  const handleCount = (value) =>
+    !(count === 0 && value === -1) ? setCount(count + value) : count;
+
+  const handleOrderButtonClick = () => {
+    if (count === 0 && orderInCart) {
+      removeOrderFromCart(productId);
+      orderInCart = undefined;
+    }
+    if (!orderInCart && count > 0) {
+      addOrderToCart({
+        title,
+        slug,
+        id: productId,
+        price: defaultProductVariant?.price,
+        quantity: count,
+        mainImage
+      });
+    }
+    if (orderInCart) {
+      updateOrderQuantity(productId, count);
+    }
+    showCart();
+  };
+
   return (
     <div className="container mx-auto px-6">
       <div className="md:flex md:items-center">
@@ -16,7 +52,7 @@ function ProductPage(props) {
               .width(1051)
               .fit("crop")
               .quality(80)}
-            alt={mainImage?.alt || `Photo of ${title}`}
+            alt={mainImage?.alt || `Photo of ${title}`}
           />
         </div>
         <div className="w-full max-w-lg mx-auto mt-5 md:ml-8 md:mt-0 md:w-1/2">
@@ -30,7 +66,7 @@ function ProductPage(props) {
               Count:
             </label>
             <div className="flex items-center mt-1">
-              <button onClick={() => handleCount(1)}className="text-gray-500 focus:outline-none focus:text-gray-600">
+              <button onClick={() => handleCount(1)} className="text-gray-500 focus:outline-none focus:text-gray-600">
                 <svg
                   className="h-5 w-5"
                   fill="none"
@@ -60,10 +96,14 @@ function ProductPage(props) {
             </div>
           </div>
           <div className="flex items-center mt-6">
-            <button className="px-8 py-2 bg-indigo-600 text-white text-sm font-medium rounded hover:bg-indigo-500 focus:outline-none focus:bg-indigo-500">
+            <button
+              onClick={handleOrderButtonClick}
+              className="px-8 py-2 bg-indigo-600 text-white text-sm font-medium rounded hover:bg-indigo-500 focus:outline-none focus:bg-indigo-500">
               Order Now
             </button>
-            <button className="mx-2 text-gray-600 border rounded-md p-2 hover:bg-gray-200 focus:outline-none">
+            <button
+              onClick={toggleCartVisibility}
+              className="mx-2 text-gray-600 border rounded-md p-2 hover:bg-gray-200 focus:outline-none">
               <svg
                 className="h-5 w-5"
                 fill="none"
@@ -73,7 +113,8 @@ function ProductPage(props) {
                 viewBox="0 0 24 24"
                 stroke="currentColor"
               >
-                <path d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+                <path
+                  d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
               </svg>
             </button>
           </div>
