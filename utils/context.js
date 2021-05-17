@@ -6,6 +6,10 @@ const CartContextProvider = ({ children }) => {
   const [cart, setCart] = useState([]);
   const [cartOpen, setCartVisibility] = useState(false);
 
+  const removeAllItemsFromCart = () => {
+    setCart([]);
+  };
+
   const showCart = () => {
     setCartVisibility(true);
   };
@@ -60,7 +64,8 @@ const CartContextProvider = ({ children }) => {
         cartOpen,
         showCart,
         hideCart,
-        toggleCartVisibility
+        toggleCartVisibility,
+        removeAllItemsFromCart
       }}>
       {children}
     </CartContext.Provider>
